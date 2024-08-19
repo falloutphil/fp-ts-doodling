@@ -26,15 +26,6 @@ const functorX: Functor1<URI> = {
   map: <A, B>(fa: X<A>, f: (a: A) => B): X<B> => ({ x: f(fa.x) }),
 };
 
-// Define a generic map function that works with any Functor
-function genericMap<F extends URIS, A, B>(
-  functor: Functor1<F>, 
-  fa: Kind<F, A>, 
-  f: (a: A) => B
-): Kind<F, B> {
-  return functor.map(fa, f);
-}
-
 // Define a function that doubles a number and appends "!" to the result
 function doubleAndBang<F extends URIS>(
   functor: Functor1<F>,
@@ -42,8 +33,8 @@ function doubleAndBang<F extends URIS>(
 ): Kind<F, string> {
   return pipe(
     fa,
-    (fa) => genericMap(functor, fa, (n) => n * 2),
-    (fa) => genericMap(functor, fa, (s) => `${s}!`)
+    (fa) => functor.map(fa, (n) => n * 2),
+    (fa) => functor.map(fa, (s) => `${s}!`)
   );
 }
 
