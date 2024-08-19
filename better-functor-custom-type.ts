@@ -1,7 +1,18 @@
 import { array as functorArray } from 'fp-ts/lib/Array'; // Importing array as functorArray
 import { Functor1 } from 'fp-ts/lib/Functor';
 import { Kind, URIS } from 'fp-ts/lib/HKT';
-import { pipe } from 'fp-ts/lib/function';
+import { pipe, flow } from 'fp-ts/lib/function';
+
+
+// Define a generic curried map function for any Functor
+// Given a Functor F, we return a function that we can use with pipe!
+// Note will only work with functions of type constructor kind *->*
+function curriedMap<F extends URIS>(
+  functor: Functor1<F>
+): <A, B>(f: (a: A) => B) => (fa: Kind<F, A>) => Kind<F, B> {
+  return <A, B>(f: (a: A) => B) => (fa: Kind<F, A>) => functor.map(fa, f);
+}
+
 
 // Define the custom type X
 type X<A> = {
@@ -31,10 +42,13 @@ function doubleAndBang<F extends URIS>(
   functor: Functor1<F>,
   fa: Kind<F, number>
 ): Kind<F, string> {
+  const myMap = curriedMap(functor)
   return pipe(
-    fa,
-    (fa) => functor.map(fa, (n) => n * 2),
-    (fa) => functor.map(fa, (s) => `${s}!`)
+    fa, 
+    myMap(flow(
+      (n: number) => n*2,
+      (n: number) => `${n}!`
+    ))
   );
 }
 
