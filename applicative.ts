@@ -1,5 +1,6 @@
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/function';
+import { sequenceT } from 'fp-ts/lib/Apply';
 
 // Step 1: Define the curried add function
 // This curried function takes a number x and returns
@@ -71,3 +72,53 @@ const result2 = pipe(
 );
 
 console.log(result2);  // Output: some(19)
+
+
+// This is a more idiomatic approach using `sequenceT` from fp-ts.
+// `sequenceT` takes a sequence of applicatives (in this case, `Option`s)
+// and combines them into a single applicative that holds a tuple of their values.
+//
+// Here, we specify that we are working with `Option` by passing `O.option` to `sequenceT`.
+// We then provide each `Option` instance (`O.some(10)`, `O.some(6)`, `O.some(3)`).
+// These are our parameters to our function - just as before.
+//
+// `sequenceT(O.option)(O.some(10), O.some(6), O.some(3))` produces an `Option`
+// that contains a tuple `[10, 6, 3]` if all provided `Option` instances are `Some`.
+// If any of them were `None`, the result would be `None`.
+//
+// After combining the values, we use `O.map` to transform the tuple.
+// The function inside `O.map` takes the tuple as a single parameter, which
+// is destructured into `x`, `y`, and `z`. We then simply add these three values together.
+//
+// Remember: `O.map` expects a function of type `(a: A) => B`, which you provide.
+// `sequenceT(O.option)` produces the `Option` containing the tuple `[10, 6, 3]`.
+// `O.map` applies your function to this tuple, transforming it into a new `Option`,
+// in this case, `Some(19)`.
+//
+// Note that the resulting operation does not need to be curried anymore,
+// since we are working with the fully combined tuple at this point.
+//
+// Conceptually: The result of `sequenceT` in this context is a tuple `(10, 6, 3)`
+// — a fixed collection of three elements.
+// In TypeScript Code: This tuple is represented as an array `[10, 6, 3]`, but with
+// a specific type indicating that it’s a tuple of exactly three numbers (`[number, number, number]`).
+//
+// All-or-Nothing Check: `sequenceT` checks all `Option`s at once. If all `Option` instances are `Some`,
+// it proceeds to combine their values into a tuple. If any `Option` is `None`, the entire result is `None`.
+//
+// Think about it this way: With the `ap` approach, you are threading a sequence of parameters,
+// checking that each one in turn is `Some(x)` and not `None`. If you get to the end and all parameters
+// are `Some(x)`, then your function is fully parameterized, and you can compute your result.
+// With `sequenceT`, you ignore the function at the end for now and simply check all the parameters.
+// If they are all `Some(x)`, a single `Some([a, b, c])` is provided to a regular function via
+// the functor's `map`, allowing for the calculation of the final result.
+//
+// The approaches are slightly different but achieve the same ends:
+// - With `ap()`, you are building a calculation that will eventually be executed.
+// - With `sequenceT`, you are building a sequence of parameters that will be mapped over a regular function.
+const result2b = pipe(
+    sequenceT(O.option)(O.some(10), O.some(6), O.some(3)),
+    O.map(([x, y, z]) => x + y + z)
+);
+
+console.log(result2b);  // Output: some(19)
