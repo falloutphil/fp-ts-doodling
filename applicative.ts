@@ -5,9 +5,11 @@ import { pipe } from 'fp-ts/lib/function';
 // This curried function takes a number x and returns
 // a function that takes another number y and returns their sum.
 const add = (x: number) => (y: number): number => x + y;
+const add3 = (x: number) => (y: number) => (z: number): number => x + y + z;
 
 // Step 2: Wrap the add function in an Option functor
 const addWrapped = O.some(add);
+const addWrapped3 = O.some(add3);
 
 // Step 3: Apply the function to Option values using ap, respecting the curried nature of ap
 // 
@@ -60,3 +62,12 @@ const result = pipe(
 );
 
 console.log(result);  // Output: some(8)
+
+const result2 = pipe(
+    addWrapped3,    
+    O.ap(O.some(10)),
+    O.ap(O.some(6)),
+    O.ap(O.some(3))
+);
+
+console.log(result2);  // Output: some(19)
