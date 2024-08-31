@@ -1,13 +1,13 @@
 import { pipe } from 'fp-ts/lib/function';
 import { getMonoid as getArrayMonoid } from 'fp-ts/lib/Array';
 import { getMonoid as getOptionMonoid, Option, some, none } from 'fp-ts/lib/Option';
-import { fold } from 'fp-ts/lib/Monoid';
+import { concatAll } from 'fp-ts/lib/Monoid';
 
 // Define a function to flatten an Array of Option<Array<A>>
 function flattenedOption<A>(options: Array<Option<Array<A>>>): Option<Array<A>> {
   const arrayMonoid = getArrayMonoid<A>();
   const optionMonoid = getOptionMonoid(arrayMonoid);
-  return pipe(options, fold(optionMonoid));
+  return pipe(options, concatAll(optionMonoid));
 }
 
 // Usage examples
