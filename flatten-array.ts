@@ -1,9 +1,9 @@
 import { pipe } from 'fp-ts/lib/function';
 import { getMonoid } from 'fp-ts/lib/Array';
-import { fold } from 'fp-ts/lib/Monoid';
+import { concatAll } from 'fp-ts/lib/Monoid';
 
 function flattened<A>(array: Array<Array<A>>): Array<A> {
-  return pipe(array, fold(getMonoid<A>()));
+  return pipe(array, concatAll(getMonoid<A>()));
 }
 
 // Usage
