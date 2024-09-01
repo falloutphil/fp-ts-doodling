@@ -15,6 +15,10 @@ const countVowels = (s: string): number =>
   s.split('').filter(c => 'aeiou'.indexOf(c.toLowerCase()) !== -1).length;
 
 // Ord instance for comparing string lengths
+// Converts Ord<string> to internally represent
+// length using Ord<number>
+// Take the N.Ord instance an upgrade it to compare
+// strings by way of their length.
 const ordLength = contramap((s: string) => s.length)(N.Ord);
 
 // Ord instance for comparing the number of vowels
