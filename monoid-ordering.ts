@@ -19,6 +19,12 @@ const countVowels = (s: string): number =>
 // length using Ord<number>
 // Take the N.Ord instance an upgrade it to compare
 // strings by way of their length.
+
+// map works from the inside out: it transforms the values contained within a structure,
+// directly modifying the contained type.
+// contramap works from the outside in: it doesn't change the contents but instead changes
+// how values are projected into the container type. It adjusts the input before it's
+// processed by the contravariant functor.
 const ordLength = contramap((s: string) => s.length)(N.Ord);
 
 // Ord instance for comparing the number of vowels
