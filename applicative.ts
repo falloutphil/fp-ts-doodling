@@ -106,7 +106,7 @@ console.log(result2);  // Output: some(19)
 // All-or-Nothing Check: `sequenceT` checks all `Option`s at once. If all `Option` instances are `Some`,
 // it proceeds to combine their values into a tuple. If any `Option` is `None`, the entire result is `None`.
 //
-// Think about it this way: With the `ap` approach, you are threading a sequence of parameters,
+// Think about it this way: With Apply's `ap` approach, you are threading a sequence of parameters,
 // checking that each one in turn is `Some(x)` and not `None`. If you get to the end and all parameters
 // are `Some(x)`, then your function is fully parameterized, and you can compute your result.
 // With `sequenceT`, you ignore the function at the end for now and simply check all the parameters.
