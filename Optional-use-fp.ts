@@ -74,6 +74,9 @@ console.log(liftedOption); // Output: Some(10)
 // Some values are combined (+ via SemigroupSum) and how None values are managed
 // (i.e., None short-circuits the operation).
 
+// This is kinda like the general case of:
+// const result = liftA2(Apply)(SemigroupSum.concat)(some(2), some(3));  // Some(5)
+// But it returns a reusable semigroup for any Option type:
 const semigroup = getApplySemigroup(O.Apply)(SemigroupSum);
 // This semigroup allows us to combine two Option values where both need to be Some for a result
 const combined = semigroup.concat(O.some(2), O.some(3)); // Some(5)
