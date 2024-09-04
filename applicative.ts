@@ -117,8 +117,8 @@ console.log(result2);  // Output: some(19)
 // - With `ap()`, you are building a calculation that will eventually be executed.
 // - With `sequenceT`, you are building a sequence of parameters that will be mapped over a regular function.
 const result2b = pipe(
-    sequenceT(O.option)(O.some(10), O.some(6), O.some(3)),
-    O.map(([x, y, z]) => x + y + z)
+    sequenceT(O.Apply)(O.some(10), O.some(6), O.some(3)),
+    O.map(([x, y, z]) => x + y + z) // partially applied map a->b, requires fa to make fb
 );
 
 console.log(result2b);  // Output: some(19)
