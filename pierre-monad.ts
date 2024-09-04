@@ -29,7 +29,7 @@ const landRight = (n: Birds) => (pole: Pole): O.Option<Pole> =>
 const landingSequence = pipe(
   O.some([0, 0]), // Start with an initial balanced pole in the Option context
   O.flatMap(landLeft(1)),   // First, land 1 bird on the left
-  O.flatMap(landRight(4)),  // Then, land 4 birds on the right
+  O.flatMap(landRight(4)),  // Then, land 4 birds on the right - boom!  Change to 3 to see success work!
   O.flatMap(landLeft(-1)),  // Next, one bird flies away from the left
   O.flatMap(landRight(-2))  // Finally, two birds fly away from the right
 );
